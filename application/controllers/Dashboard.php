@@ -1,13 +1,19 @@
 <?php
-class Dashboard extends CI_Controller {
-    public function __construct() {
+class Dashboard extends CI_Controller
+{
+
+    // Constructor - Cek autentikasi session
+    public function __construct()
+    {
         parent::__construct();
         if (!$this->session->userdata('user_id')) {
             redirect('auth/login');
         }
     }
-    
-    public function index() {
+
+    // Redirect ke dashboard sesuai role (admin/kasir/user)
+    public function index()
+    {
         $role = $this->session->userdata('role');
         if ($role == 'admin') {
             redirect('admin');
