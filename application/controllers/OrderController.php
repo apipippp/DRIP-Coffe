@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class OrderController extends CI_Controller
 {
+
+    // Constructor - Load OrderModel & QueueModel
     public function __construct()
     {
         parent::__construct();
@@ -10,6 +12,7 @@ class OrderController extends CI_Controller
         $this->load->model('QueueModel', 'queueModel');
     }
 
+    // AJAX - Buat pesanan baru
     public function create()
     {
         $data = json_decode(file_get_contents('php://input'), true);
@@ -45,6 +48,7 @@ class OrderController extends CI_Controller
         }
     }
 
+    // AJAX - Ambil riwayat pesanan
     public function getHistory()
     {
         $history = $this->orderModel->getOrderHistory();
@@ -53,6 +57,7 @@ class OrderController extends CI_Controller
             ->set_output(json_encode($history));
     }
 
+    // AJAX - Ambil pesanan aktif
     public function getActive()
     {
         $active = $this->orderModel->getActiveOrder();
