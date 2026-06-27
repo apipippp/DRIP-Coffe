@@ -1,7 +1,11 @@
 <?php
 
-class Admin extends CI_Controller {
-    public function __construct() {
+class Admin extends CI_Controller
+{
+
+    // Constructor - Inisialisasi, cek autentikasi admin, load model
+    public function __construct()
+    {
         parent::__construct();
         if (!$this->session->userdata('user_id') || $this->session->userdata('role') != 'admin') {
             redirect('auth/login');
@@ -11,8 +15,10 @@ class Admin extends CI_Controller {
         $this->load->model('User_model');
         $this->load->model('Order_model');
     }
-    
-    public function index() {
+
+    // Dashboard admin - lihat statistik income harian/bulanan
+    public function index()
+    {
         $selected_date = $this->input->get('date') ?: date('Y-m-d');
         $month_start = date('Y-m-01 00:00:00');
         $month_end = date('Y-m-t 23:59:59');
@@ -27,7 +33,9 @@ class Admin extends CI_Controller {
         $this->load->view('templates/footer_admin');
     }
 
-    public function orders_recap() {
+    // Rekapitulasi pesanan yang sudah selesai
+    public function orders_recap()
+    {
         $data['orders'] = $this->Order_model->get_all_completed();
         $data['total_revenue'] = $this->Order_model->sum_revenue();
         $data['total_orders'] = count($data['orders']);
@@ -35,15 +43,19 @@ class Admin extends CI_Controller {
         $this->load->view('admin/orders_recap', $data);
         $this->load->view('templates/footer_admin');
     }
-    
-    public function products() {
+
+    // Tampilkan daftar semua produk
+    public function products()
+    {
         $data['products'] = $this->Product_model->get_all();
         $this->load->view('templates/header_admin');
         $this->load->view('admin/products', $data);
         $this->load->view('templates/footer_admin');
     }
-    
-    public function add_product() {
+
+    // Tambah produk baru (dengan upload gambar)
+    public function add_product()
+    {
         // Upload gambar
         $config['upload_path'] = './uploads/';
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
@@ -64,17 +76,23 @@ class Admin extends CI_Controller {
         $this->Product_model->create($data);
         redirect('admin/products');
     }
-    
-    public function edit_product($id) {
+
+    // Edit produk berdasarkan ID
+    public function edit_product($id)
+    {
         // Similar
     }
-    
-    public function delete_product($id) {
+
+    // Hapus produk berdasarkan ID
+    public function delete_product($id)
+    {
         $this->Product_model->delete($id);
         redirect('admin/products');
     }
-    
-    public function users() {
+
+    // Tampilkan daftar semua user
+    public function users()
+    {
         $data['users'] = $this->User_model->get_all();
         $this->load->view('templates/header_admin');
         $this->load->view('admin/users', $data);
