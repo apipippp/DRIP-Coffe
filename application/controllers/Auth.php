@@ -1,24 +1,31 @@
 <?php
-class Auth extends CI_Controller {
-    public function __construct() {
+class Auth extends CI_Controller
+{
+
+    // Constructor - Inisialisasi controller, load model & library
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('User_model');
         $this->load->library('form_validation');
     }
-    
-    public function login() {
+
+    // Tampilkan halaman form login
+    public function login()
+    {
         if ($this->session->userdata('user_id')) {
             redirect('dashboard');
         }
         $this->load->view('auth/login');
     }
-    
-    public function do_login() {
+
+    // Proses login user (verifikasi email & password)
+    public function do_login()
+    {
         $email = $this->input->post('email');
         $password = $this->input->post('password');
         $user = $this->User_model->get_by_email($email);
-        
-        // Debugging / backup checking
+
         if (!$user) {
             $this->session->set_flashdata('error', 'User tidak ditemukan dengan email tersebut');
             redirect('auth/login');
@@ -38,12 +45,16 @@ class Auth extends CI_Controller {
             redirect('auth/login');
         }
     }
-    
-    public function register() {
+
+    // Tampilkan halaman form registrasi
+    public function register()
+    {
         $this->load->view('auth/register');
     }
-    
-    public function do_register() {
+
+    // Proses registrasi user baru (validasi form & simpan data)
+    public function do_register()
+    {
         $this->form_validation->set_rules('name', 'Nama', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[users.email]');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
@@ -60,8 +71,10 @@ class Auth extends CI_Controller {
             redirect('auth/login');
         }
     }
-    
-    public function logout() {
+
+    // Logout user & hapus session
+    public function logout()
+    {
         $this->session->sess_destroy();
         redirect('auth/login');
     }
